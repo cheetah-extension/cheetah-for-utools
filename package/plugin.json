@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "preload": "index.js",
+  "logo": "assets/logo.png",
+  "platform": [
+    "win32",
+    "darwin"
+  ],
+  "development": {
+    "preload": "/Users/caohaoxia/Documents/work/tools/cheetah-for-utools/package/index.js"
+  },
+  "features": [
+    {
+      "code": "open",
+      "explain": "使用默认编辑器打开项目",
+      "cmds": [
+        "open",
+        "git_gui_open",
+        "terminal_open",
+        "finder_open",
+        "set_application"
+      ]
+    },
+    {
+      "code": "setting",
+      "explain": "打开设置面板",
+      "cmds": [
+        "setting",
+        "设置"
+      ]
+    }
+  ]
+}
