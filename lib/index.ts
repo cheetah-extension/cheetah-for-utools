@@ -1,15 +1,12 @@
-import { filterWithCache, filterWithSearchResult } from './utils';
-import { ResultItem } from './type';
+import { filterWithCache, filterWithSearchResult } from './common/core';
+import { getDefaultApp } from './common/application';
+import { ResultItem } from './common/type';
+import { commandMap } from './common/constant';
+// import { platform } from './base';
 import './mount';
 const cp = require('child_process');
 
 const refreshKeyword = '[refresh]';
-const application: { [key: string]: string } = {
-  open: 'Visual Studio Code',
-  git_gui_open: 'Fork',
-  terminal_open: 'terminal',
-  finder_open: 'Finder',
-};
 
 /**
  * @description: 搜索项目
@@ -29,6 +26,7 @@ async function search(action: any, keyword: string, callbackSetList: any) {
     result = await filterWithSearchResult(searchKeyword);
     fromCache = false;
   }
+
   if (fromCache) {
     result.push({
       title: '忽略缓存重新搜索',
@@ -37,6 +35,7 @@ async function search(action: any, keyword: string, callbackSetList: any) {
       arg: searchKeyword,
     });
   }
+
   if (!result.length) {
     result.push({
       title: `没有找到名称包含 ${searchKeyword} 的项目`,
@@ -44,6 +43,7 @@ async function search(action: any, keyword: string, callbackSetList: any) {
       icon: 'assets/empty.png',
     });
   }
+
   return callbackSetList(result);
 }
 
@@ -70,7 +70,7 @@ window.exports = {
         if (commonSelect(itemData)) return;
         const { payload }: { payload: string } = action;
         const { path = '' } = itemData;
-        cp.exec(`open -a "${application[payload]}" ${path}`);
+        cp.exec(`open -a "${getDefaultApp(commandMap[payload])}" ${path}`);
         utools.outPlugin();
         utools.hideMainWindow();
       },

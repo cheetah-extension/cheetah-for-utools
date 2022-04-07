@@ -12,13 +12,18 @@
   "features": [
     {
       "code": "open",
-      "explain": "使用默认编辑器打开项目",
+      "explain": "搜索并打开项目",
       "cmds": [
         "open",
         "git_gui_open",
         "terminal_open",
-        "finder_open",
-        "set_application"
+        "folder_open",
+        "set_application",
+        "编辑器",
+        "Git 应用",
+        "终端",
+        "文件夹",
+        "设置应用"
       ]
     },
     {

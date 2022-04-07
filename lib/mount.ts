@@ -1,17 +1,12 @@
-window.setValue = function (key: string, value: any) {
-  return utools.db.put({
-    _id: key,
-    data: value,
-  });
-};
+import { chooseFile, getValue, setValue } from './common';
+import { platform } from './common/base';
+import { getDefaultApp, setDefaultApp } from './common/application';
 
-window.getValue = function (key: string) {
-  return utools.db.get(key);
-};
-
-window.chooseFile = function () {
-  return utools.showOpenDialog({
-    filters: [{ extensions: ['app'] }],
-    properties: ['openFile'],
-  });
-};
+Object.assign(window, {
+  platform,
+  chooseFile,
+  getValue,
+  setValue,
+  getDefaultApp,
+  setDefaultApp,
+});

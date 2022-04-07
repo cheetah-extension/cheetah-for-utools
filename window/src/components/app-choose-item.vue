@@ -27,6 +27,11 @@ const props = defineProps({
     required: true,
     default: '',
   },
+  typeKey: {
+    type: String,
+    required: true,
+    default: '',
+  },
 });
 
 const emits = defineEmits(['onChooseApp']);
@@ -36,11 +41,11 @@ function chooseApp() {
   if (!result) {
     return;
   }
-  emits('onChooseApp', result[0]);
+  emits('onChooseApp', props.typeKey, result[0]);
 }
 
 function clearAppPath() {
-  emits('onChooseApp', '');
+  emits('onChooseApp', props.typeKey, '');
 }
 
 </script>
