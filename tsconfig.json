@@ -12,6 +12,9 @@
     "isolatedModules": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es5",

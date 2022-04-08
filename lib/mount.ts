@@ -1,12 +1,12 @@
 import { chooseFile, getValue, setValue } from './common';
 import { platform } from './common/base';
-import { getDefaultApp, setDefaultApp } from './common/application';
+import { getAllDefaultApp, setDefaultApp } from './common/application';
 
 Object.assign(window, {
   platform,
   chooseFile,
   getValue,
   setValue,
-  getDefaultApp,
+  getAllDefaultApp,
   setDefaultApp,
 });

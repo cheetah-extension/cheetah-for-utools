@@ -19,8 +19,10 @@ export interface ResultItem {
   title: string;
   description: string;
   icon: string;
+  type?: string;
   arg?: string;
   path?: string;
+  idePath?: string;
 }
 
 export interface Config {

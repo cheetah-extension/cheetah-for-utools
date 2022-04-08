@@ -28,8 +28,18 @@ export function setValue(key: string, value: any, rev?: string) {
   return utools.dbStorage.setItem(key, data);
 }
 
+export function notice(message: string) {
+  utools.showNotification(message);
+}
+
+export function copy(text: string) {
+  utools.copyText(text);
+}
+
 export default {
   chooseFile,
   getValue,
   setValue,
+  notice,
+  copy,
 };

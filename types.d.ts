@@ -3,7 +3,7 @@ declare interface Window {
   getValue: any;
   chooseFile: any;
   platform: any;
-  getDefaultApp: any;
+  getAllDefaultApp: any;
   setDefaultApp: any;
 }
 

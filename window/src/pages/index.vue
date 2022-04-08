@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import AppChooseItem from '@/components/app-choose-item.vue';
-let defaultApp: { [key: string]: any } = ref(window.getDefaultApp());
+let defaultApp: { [key: string]: any } = ref(window.getAllDefaultApp());
 
 const defaultAppDescribe: { [key: string]: any } = {
   open: {
@@ -35,7 +35,7 @@ const defaultAppDescribe: { [key: string]: any } = {
 
 function onChooseApp(key: string, appPath: string) {
   window.setDefaultApp(key, appPath);
-  defaultApp.value = window.getDefaultApp();
+  defaultApp.value = window.getAllDefaultApp();
 }
 
 

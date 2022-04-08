@@ -69,14 +69,14 @@ async function combinedCache(newCache: Project[]): Promise<Project[]> {
 }
 
 // 读取文件内容
-async function readFile(filePath: string): Promise<string> {
+function readFile(filePath: string): string {
   return fs.readFileSync(filePath).toString();
 }
 
 // 读取缓存
-export async function readCache(): Promise<Config> {
+export function readCache(): Config {
   try {
-    const history = await readFile(cachePath);
+    const history = readFile(cachePath);
     return JSON.parse(history) ?? { editor: {}, cache: [] };
   } catch (error: any) {
     if (error.message === 'no such file or directory') {
@@ -88,7 +88,7 @@ export async function readCache(): Promise<Config> {
 }
 
 // 查找博客目录
-export async function findProject(dirPath: string): Promise<Project[]> {
+export function findProject(dirPath: string): Project[] {
   const result: Project[] = [];
   const currentChildren: ChildInfo[] = [];
   let dirIter = [];
@@ -98,11 +98,11 @@ export async function findProject(dirPath: string): Promise<Project[]> {
     return result;
   }
 
-  for await (const item of dirIter) {
+  for (const item of dirIter) {
     const itemPath = path.join(dirPath, item);
     let isDir = false;
     try {
-      isDir = await fs.statSync(itemPath).isDirectory();
+      isDir = fs.statSync(itemPath).isDirectory();
     } catch (error: any) {
       //
     }
@@ -125,7 +125,7 @@ export async function findProject(dirPath: string): Promise<Project[]> {
     result.push({
       name: path.basename(dirPath),
       path: dirPath,
-      type: await projectTypeParse(currentChildren),
+      type: projectTypeParse(currentChildren),
       hits: 0,
       idePath: '',
     });
@@ -138,19 +138,19 @@ export async function findProject(dirPath: string): Promise<Project[]> {
     );
   }
   if (isGitProject && hasSubmodules) {
-    nextLevelDir = await findSubmodules(path.join(dirPath, '.gitmodules'));
+    nextLevelDir = findSubmodules(path.join(dirPath, '.gitmodules'));
   }
 
   for (let i = 0; i < nextLevelDir.length; i += 1) {
     const dir = nextLevelDir[i];
-    result.push(...(await findProject(path.join(dirPath, dir.name))));
+    result.push(...findProject(path.join(dirPath, dir.name)));
   }
   return result;
 }
 
 // 查找项目内的 submodule
-export async function findSubmodules(filePath: string): Promise<ChildInfo[]> {
-  const fileContent = await readFile(filePath);
+export function findSubmodules(filePath: string): ChildInfo[] {
+  const fileContent = readFile(filePath);
   const matchModules = fileContent.match(/(?<=path = )([\S]*)(?=\n)/g) ?? [];
   return matchModules.map((module) => {
     return {
@@ -184,21 +184,21 @@ function findDependFromPackage(
   return findDependList.length >= dependList.length;
 }
 
-async function getDependList(allFile: ChildInfo[]): Promise<string[]> {
+function getDependList(allFile: ChildInfo[]): string[] {
   const packageJsonFilePath =
     allFile.find(({ name }) => name === 'package.json')?.path ?? '';
   if (!packageJsonFilePath) {
     return [];
   }
   const { dependencies = [], devDependencies = [] } = JSON.parse(
-    await readFile(packageJsonFilePath)
+    readFile(packageJsonFilePath)
   );
   const dependList = { ...dependencies, ...devDependencies };
   return Object.keys(dependList);
 }
 
 // 解析项目类型
-async function projectTypeParse(children: ChildInfo[]): Promise<string> {
+function projectTypeParse(children: ChildInfo[]): string {
   if (findFileFromProject(children, ['cargo.toml'])) {
     return 'rust';
   }
@@ -224,7 +224,7 @@ async function projectTypeParse(children: ChildInfo[]): Promise<string> {
     }
 
     const isTS = findFileFromProject(children, ['tsconfig.json']);
-    const dependList = await getDependList(children);
+    const dependList = getDependList(children);
 
     if (findDependFromPackage(dependList, ['react'])) {
       return isTS ? 'react_ts' : 'react';
@@ -273,17 +273,21 @@ export function output(projectList: Project[]): ResultItem[] {
       path,
       type,
       hits,
+      idePath
     }: {
       name: string;
       path: string;
       type: string;
       hits: number;
+      idePath: string;
     }) => {
       return {
         title: name,
         description: `${hits} ${path}`,
         icon: `assets/type/${type}.png`,
         path,
+        type,
+        idePath
       };
     }
   );

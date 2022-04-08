@@ -16,7 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "vue": "^3.2.25",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.14",
+    "windows-shortcuts": "^0.1.6"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",

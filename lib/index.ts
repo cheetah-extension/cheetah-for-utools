@@ -1,9 +1,9 @@
 import { filterWithCache, filterWithSearchResult } from './common/core';
-import { getDefaultApp } from './common/application';
+import { getOpenCommand } from './common/application';
 import { ResultItem } from './common/type';
-import { commandMap } from './common/constant';
 // import { platform } from './base';
 import './mount';
+import { commandMap } from './common/constant';
 const cp = require('child_process');
 
 const refreshKeyword = '[refresh]';
@@ -66,11 +66,15 @@ window.exports = {
     mode: 'list',
     args: {
       search,
-      select: (action: any, itemData: ResultItem) => {
+      select: async (action: any, itemData: ResultItem) => {
         if (commonSelect(itemData)) return;
         const { payload }: { payload: string } = action;
-        const { path = '' } = itemData;
-        cp.exec(`open -a "${getDefaultApp(commandMap[payload])}" ${path}`);
+        const commandType = commandMap[payload];
+        // if (condition) {
+          
+        // }
+        const command = await getOpenCommand(commandType, itemData);
+        cp.exec(command);
         utools.outPlugin();
         utools.hideMainWindow();
       },
@@ -98,7 +102,6 @@ window.exports = {
             settingWindow.show();
           }
         );
-        utools.showNotification(action.payload);
         utools.hideMainWindow();
       },
     },
