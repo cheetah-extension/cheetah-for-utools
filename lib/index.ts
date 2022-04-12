@@ -1,7 +1,11 @@
 import { filterWithCache, filterWithSearchResult } from './common/core';
-import { getOpenCommand } from './common/application';
+import {
+  getOpenCommand,
+  setProjectApp,
+  updateHits,
+} from './common/application';
 import { ResultItem } from './common/type';
-// import { platform } from './base';
+import { COMMAND } from './common/constant';
 import './mount';
 import { commandMap } from './common/constant';
 const cp = require('child_process');
@@ -70,13 +74,23 @@ window.exports = {
         if (commonSelect(itemData)) return;
         const { payload }: { payload: string } = action;
         const commandType = commandMap[payload];
-        // if (condition) {
-          
-        // }
+        if (commandType === COMMAND.SET_APPLICATION) {
+          setProjectApp(itemData);
+          utools.hideMainWindow();
+          utools.outPlugin();
+          return;
+        }
         const command = await getOpenCommand(commandType, itemData);
-        cp.exec(command);
-        utools.outPlugin();
-        utools.hideMainWindow();
+
+        cp.exec(command, { windowsHide: true }, (error: any) => {
+          console.log('error', error);
+          if (error) {
+            utools.showNotification(error?.message ?? '未知错误');
+          }
+          updateHits(itemData);
+          utools.hideMainWindow();
+          utools.outPlugin();
+        });
       },
     },
   },

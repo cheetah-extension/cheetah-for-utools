@@ -15,6 +15,7 @@ export default {
     'path',
     'fs',
     'crypto',
+    'child_process'
   ],
   plugins: [
     resolve(),

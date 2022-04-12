@@ -1,20 +1,20 @@
 export const COMMAND = {
   OPEN: 'open',
   GIT_GUI_OPEN: 'git_gui_open',
-  FOLDER_OPEN: 'folder_open',
   TERMINAL_OPEN: 'terminal_open',
+  FOLDER_OPEN: 'folder_open',
   SET_APPLICATION: 'set_application',
 };
 
 export const commandMap: { [key: string]: string } = {
   编辑器: COMMAND.OPEN,
   open: COMMAND.OPEN,
-  Git应用: 'git_gui_open',
-  git_gui_open: 'git_gui_open',
-  终端: 'terminal_open',
-  terminal_open: 'terminal_open',
-  文件夹: 'folder_open',
-  folder_open: 'folder_open',
-  设置项目默认应用: 'set_application',
-  set_application: 'set_application',
+  Git应用: COMMAND.GIT_GUI_OPEN,
+  git_gui_open: COMMAND.GIT_GUI_OPEN,
+  终端: COMMAND.TERMINAL_OPEN,
+  terminal_open: COMMAND.TERMINAL_OPEN,
+  文件夹: COMMAND.FOLDER_OPEN,
+  folder_open: COMMAND.FOLDER_OPEN,
+  设置项目默认应用: COMMAND.SET_APPLICATION,
+  set_application: COMMAND.SET_APPLICATION,
 };

@@ -2,13 +2,20 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { getValue, notice } from './';
 import { ChildInfo, Project, Config, ResultItem } from './type';
+import { ignoreFolders } from './base';
 
-const HOME_PATH = process.env.HOME ?? '';
+const HOME_PATH = process.env.HOME ?? process.env.APPDATA ?? '';
+
+const ignoreFoldersReg = new RegExp(ignoreFolders.join('|'), 'i');
 
 // 缓存路径
 const cachePath = path.join(
-  `${HOME_PATH}/.utools/fmcat/cheetah`,
+  HOME_PATH,
+  '.utools',
+  'fmcat',
+  'cheetah',
   'config.json'
 );
 
@@ -91,6 +98,9 @@ export function readCache(): Config {
 export function findProject(dirPath: string): Project[] {
   const result: Project[] = [];
   const currentChildren: ChildInfo[] = [];
+  if (ignoreFoldersReg.test(dirPath)) {
+    return result;
+  }
   let dirIter = [];
   try {
     dirIter = fs.readdirSync(dirPath);
@@ -273,7 +283,7 @@ export function output(projectList: Project[]): ResultItem[] {
       path,
       type,
       hits,
-      idePath
+      idePath,
     }: {
       name: string;
       path: string;
@@ -287,7 +297,7 @@ export function output(projectList: Project[]): ResultItem[] {
         icon: `assets/type/${type}.png`,
         path,
         type,
-        idePath
+        idePath,
       };
     }
   );
@@ -296,10 +306,11 @@ export function output(projectList: Project[]): ResultItem[] {
 
 // 在多个工作目录下搜索项目，工作目录以英文逗号分隔
 async function batchFindProject() {
-  const workspaces =
-    '/Users/caohaoxia/Documents/work,/Users/caohaoxia/Documents/document/周报'
-      .replace(/^~/, HOME_PATH)
-      .split(/,|，/);
+  const workspaces = getValue('workspaces') || [];
+  if (!workspaces.length) {
+    notice('请先配置工作目录');
+    return [];
+  }
   const projectList: Project[] = [];
   for (let i = 0; i < workspaces.length; i += 1) {
     const dirPath = workspaces[i];
@@ -322,6 +333,16 @@ export async function filterWithSearchResult(
   const projectList: Project[] = await batchFindProject();
   writeCache(await combinedCache(projectList));
   return filterWithCache(keyword);
+}
+
+// 清除缓存
+export function clearCache() {
+  try {
+    fs.unlinkSync(cachePath);
+    notice('缓存清除成功');
+  } catch (error) {
+    notice('缓存清除失败');
+  }
 }
 
 export default {

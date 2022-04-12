@@ -1,7 +1,13 @@
 export function chooseFile() {
   return utools.showOpenDialog({
-    filters: [{ extensions: ['app'] }],
+    filters: [{ extensions: ['app', 'exe', 'lnk'] }],
     properties: ['openFile'],
+  });
+}
+
+export function chooseFolder() {
+  return utools.showOpenDialog({
+    properties: ['openDirectory'],
   });
 }
 

@@ -2,13 +2,13 @@
   <div class="setting-page">
     <div class="logo">猎豹</div>
     <div class="main-area">
-      <app-choose-item
-        :label="defaultAppDescribe[type].label"
-        :app-path="app"
-        :type-key="type"
-        @onChooseApp="onChooseApp"
-        v-for="(app, type) in defaultApp"
-      >{{ defaultAppDescribe[type].desc }}</app-choose-item>
+      <workspace-manager @onWorkspaceChange="onWorkspaceChange" :workspaces="workspaces" />
+      <app-choose-item :label="defaultAppDescribe[type].label" :app-path="app" :type-key="type"
+        @onChooseApp="onChooseApp" v-for="(app, type) in defaultApp">
+        {{ defaultAppDescribe[type].desc }}
+        <div class="sub-desc" v-if="platform.isWin">{{ defaultAppDescribe[type].append }}</div>
+      </app-choose-item>
+      <cell-button @onClick="onClearCache">清除缓存</cell-button>
     </div>
   </div>
 </template>
@@ -16,26 +16,43 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import AppChooseItem from '@/components/app-choose-item.vue';
+import WorkspaceManager from '@/components/workspace-manager.vue';
+import CellButton from '@/components/cell-button.vue';
+
 let defaultApp: { [key: string]: any } = ref(window.getAllDefaultApp());
+let workspaces = ref(window.getValue('workspaces') || []);
+const platform = ref(window.platform);
 
 const defaultAppDescribe: { [key: string]: any } = {
   open: {
     label: '默认编辑器',
     desc: 'open 命令选择项目默认由此编辑器打开',
+    append: '',
   },
   git_gui_open: {
     label: 'Git GUI 应用',
     desc: 'git_gui_open 命令选择项目由此应用打开',
+    append: 'windows 下暂时只支持 Fork (https://git-fork.com)',
   },
   terminal_open: {
     label: '终端',
     desc: 'terminal_open 命令选择项目由此终端打开',
+    append: 'windows 下暂时只支持 CMD、PowerShell',
   }
 }
 
 function onChooseApp(key: string, appPath: string) {
   window.setDefaultApp(key, appPath);
   defaultApp.value = window.getAllDefaultApp();
+}
+
+function onWorkspaceChange(result: string[]) {
+  workspaces.value = result;
+  window.setValue('workspaces', result);
+}
+
+function onClearCache() {
+  window.clearCache();
 }
 
 
@@ -69,5 +86,9 @@ function onChooseApp(key: string, appPath: string) {
   .main-area {
     width: 100%;
   }
+}
+
+.sub-desc{
+  color: #666;
 }
 </style>
