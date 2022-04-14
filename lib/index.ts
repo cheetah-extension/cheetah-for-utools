@@ -106,7 +106,7 @@ window.exports = {
             resizable: false,
             minimizable: false,
             maximizable: false,
-            height: 850,
+            height: 800,
             width: 500,
             webPreferences: {
               preload: 'index.js',

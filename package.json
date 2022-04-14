@@ -4,11 +4,8 @@
   "description": "猎豹 —— Git 项目快速打开工具 For uTools",
   "main": "index.js",
   "scripts": {
-    "watch": "rollup -c -w",
-    "compile": "./build.sh",
-    "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build --watch --emptyOutDir",
-    "preview": "vite preview",
+    "preload": "rollup -c -w",
+    "view-build": "vue-tsc --noEmit && vite build --watch --emptyOutDir",
     "start": "run-p watch dev"
   },
   "keywords": [],
