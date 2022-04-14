@@ -1,13 +1,13 @@
 declare interface Window {
-  setValue: any;
-  getValue: any;
-  chooseFile: any;
-  chooseFolder: any;
-  notice: any;
+  setValue(key: string, value: any): void;
+  getValue(key: string): any;
+  chooseFile(): string[];
+  chooseFolder(): string[];
+  notice(content: string): void;
   platform: any;
-  getAllDefaultApp: any;
-  setDefaultApp: any;
-  clearCache: any;
+  getAllDefaultApp(): any;
+  setDefaultApp(key: string, appPath: string): void;
+  clearCache(): void;
 }
 
 declare var utools: any;

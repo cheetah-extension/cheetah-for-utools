@@ -1,7 +1,7 @@
 {
-  "name": "cheetah",
+  "name": "cheetah-for-utools",
   "version": "1.0.0",
-  "description": "",
+  "description": "猎豹 —— Git 项目快速打开工具 For uTools",
   "main": "index.js",
   "scripts": {
     "watch": "rollup -c -w",

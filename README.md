@@ -2,7 +2,34 @@
 
 查找指定目录下的 Git 项目，并使用配置的应用快速打开。
 
-## 关联项目
+## 命令介绍
 
-[猎豹 for Alfred](https://github.com/RongleCat/fmcat-open-project)  
-[猎豹 for Raycast](https://github.com/RongleCat/quick-open-project)  
+### setting / 设置
+
+打开设置面板，可配置默认应用、工作区、清空缓存。
+
+![设置面板](https://pic.fmcat.top/picgo/20220414151828.png)
+
+### open / 编辑器
+
+输入关键字匹配项目，使用 `默认编辑器` 打开项目。
+
+### git_gui_open / Git 应用
+
+输入关键字匹配项目，使用 `Git GUI 应用` 打开项目。
+
+### terminal_open / 终端
+
+输入关键字匹配项目，使用 `终端` 打开项目。
+
+### folder_open / 文件夹
+
+输入关键字匹配项目，打开项目文件夹。
+
+### set_application / 设置项目默认应用
+
+输入关键字匹配项目，为项目设置打开应用，优先级高于默认编辑器。
+
+## 隐私
+
+所有代码均以开源，无任何上传代码行为，如不放心可以参考逻辑自行开发。
