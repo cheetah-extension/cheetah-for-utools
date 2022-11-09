@@ -52,7 +52,7 @@ function onWorkspaceChange(result: string[]) {
 }
 
 function onClearCache() {
-  window.clearCache();
+  window.onClearCache();
 }
 
 

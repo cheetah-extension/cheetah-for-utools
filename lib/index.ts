@@ -1,14 +1,23 @@
-import { filterWithCache, filterWithSearchResult } from './common/core';
+import cp from 'child_process';
+import './mount';
 import {
+  filterWithCache,
+  filterWithSearchResult,
+  updateHits,
+  Project,
+  ResultItem,
+  COMMAND,
   getOpenCommand,
   setProjectApp,
-  updateHits,
-} from './common/application';
-import { ResultItem } from './common/type';
-import { COMMAND } from './common/constant';
-import './mount';
-import { commandMap } from './common/constant';
-const cp = require('child_process');
+} from 'cheetah-core';
+import {
+  initCore,
+  output,
+  chooseFile,
+  commandMap,
+  getAllDefaultApp,
+  errorHandle,
+} from './common';
 
 const refreshKeyword = '[refresh]';
 
@@ -19,36 +28,48 @@ const refreshKeyword = '[refresh]';
  * @param {any} callbackSetList 渲染候选列表的回调
  * @return {*}
  */
-async function search(action: any, keyword: string, callbackSetList: any) {
-  const needRefresh: boolean = keyword.includes(refreshKeyword);
-  const searchKeyword = keyword.replace(refreshKeyword, '');
-  if (!searchKeyword) return callbackSetList();
-  let result: ResultItem[] = await filterWithCache(searchKeyword);
-  let fromCache = true;
-  // 如果缓存结果为空或者需要刷新缓存，则重新搜索
-  if (!result.length || needRefresh) {
-    result = await filterWithSearchResult(searchKeyword);
-    fromCache = false;
-  }
+async function search(
+  action: any,
+  keyword: string,
+  callbackSetList: any
+): Promise<void> {
+  try {
+    initCore();
+    const needRefresh: boolean = keyword.includes(refreshKeyword);
+    const searchKeyword = keyword.replace(refreshKeyword, '');
+    if (!searchKeyword) return callbackSetList();
+    let projects: Project[] = await filterWithCache(searchKeyword);
+    let fromCache = true;
+    // 如果缓存结果为空或者需要刷新缓存，则重新搜索
+    if (!projects.length || needRefresh) {
+      projects = await filterWithSearchResult(searchKeyword);
+      fromCache = false;
+    }
 
-  if (fromCache) {
-    result.push({
-      title: '忽略缓存重新搜索',
-      description: '以上结果从缓存中获得,选择本条将重新搜索项目并更新缓存',
-      icon: 'assets/refresh.png',
-      arg: searchKeyword,
-    });
-  }
+    const result: ResultItem[] = output(projects);
 
-  if (!result.length) {
-    result.push({
-      title: `没有找到名称包含 ${searchKeyword} 的项目`,
-      description: '请尝试更换关键词',
-      icon: 'assets/empty.png',
-    });
-  }
+    if (fromCache) {
+      result.push({
+        title: '忽略缓存重新搜索',
+        description: '以上结果从缓存中获得,选择本条将重新搜索项目并更新缓存',
+        icon: 'assets/refresh.png',
+        arg: searchKeyword,
+      });
+    }
 
-  return callbackSetList(result);
+    if (!result.length) {
+      result.push({
+        title: `没有找到名称包含 ${searchKeyword} 的项目`,
+        description: '请尝试更换关键词，回车返回重新搜索',
+        icon: 'assets/empty.png',
+        type: 'empty',
+      });
+    }
+
+    callbackSetList(result);
+  } catch (error: any) {
+    errorHandle(error);
+  }
 }
 
 /**
@@ -57,7 +78,13 @@ async function search(action: any, keyword: string, callbackSetList: any) {
  * @return {boolean} 是否需要跳过
  */
 function commonSelect(itemData: ResultItem): boolean {
-  const { arg } = itemData;
+  const { arg, type } = itemData;
+  // 搜索结果为空的条目被点击则置空输入框
+  if (type === 'empty') {
+    utools.setSubInputValue('');
+    return true;
+  }
+  // 重新搜索时重置搜索框内容为 [refresh]+关键字
   const skip = arg !== null && arg !== undefined;
   if (skip) {
     utools.setSubInputValue(`${refreshKeyword}${arg}`);
@@ -71,26 +98,39 @@ window.exports = {
     args: {
       search,
       select: async (action: any, itemData: ResultItem) => {
-        if (commonSelect(itemData)) return;
-        const { payload }: { payload: string } = action;
-        const commandType = commandMap[payload];
-        if (commandType === COMMAND.SET_APPLICATION) {
-          setProjectApp(itemData);
-          utools.hideMainWindow();
-          utools.outPlugin();
-          return;
-        }
-        const command = await getOpenCommand(commandType, itemData);
+        try {
+          if (commonSelect(itemData)) return;
+          initCore();
+          const { payload }: { payload: string } = action;
+          const commandType = commandMap[payload];
 
-        cp.exec(command, { windowsHide: true }, (error: any) => {
-          console.log('error', error);
-          if (error) {
-            utools.showNotification(error?.message ?? '未知错误');
+          if (commandType === COMMAND.SET_APPLICATION) {
+            const appPath: string = chooseFile();
+            setProjectApp(itemData.path!, appPath);
+            utools.hideMainWindow();
+            utools.outPlugin();
+            return;
           }
-          updateHits(itemData);
-          utools.hideMainWindow();
-          utools.outPlugin();
-        });
+
+          const defaultAppPath = getAllDefaultApp()?.[commandType] ?? '';
+          
+          const command = await getOpenCommand(
+            itemData,
+            commandType,
+            defaultAppPath
+          );
+
+          cp.exec(command, { windowsHide: true }, (error: any) => {
+            if (error) {
+              utools.showNotification(error?.message ?? '未知错误');
+            }
+            updateHits(itemData.path!);
+            utools.hideMainWindow();
+            utools.outPlugin();
+          });
+        } catch (error: any) {
+          errorHandle(error);
+        }
       },
     },
   },
