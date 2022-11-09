@@ -1,10 +1,4 @@
-export const COMMAND = {
-  OPEN: 'open',
-  GIT_GUI_OPEN: 'git_gui_open',
-  TERMINAL_OPEN: 'terminal_open',
-  FOLDER_OPEN: 'folder_open',
-  SET_APPLICATION: 'set_application',
-};
+import { COMMAND } from 'cheetah-core';
 
 export const commandMap: { [key: string]: string } = {
   编辑器: COMMAND.OPEN,
@@ -17,4 +11,10 @@ export const commandMap: { [key: string]: string } = {
   folder_open: COMMAND.FOLDER_OPEN,
   设置项目默认应用: COMMAND.SET_APPLICATION,
   set_application: COMMAND.SET_APPLICATION,
+};
+
+export const platform: { [key: string]: boolean } = {
+  isMac: utools.isMacOs(),
+  isWin: utools.isWindows(),
+  isLinux: utools.isLinux(),
 };

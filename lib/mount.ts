@@ -1,7 +1,14 @@
-import { chooseFile, chooseFolder, getValue, setValue, notice } from './common';
-import { platform } from './common/base';
-import { getAllDefaultApp, setDefaultApp } from './common/application';
-import { clearCache } from './common/core';
+import {
+  chooseFile,
+  chooseFolder,
+  getValue,
+  setValue,
+  notice,
+  getAllDefaultApp,
+  setDefaultApp,
+  platform,
+  onClearCache
+} from './common';
 
 Object.assign(window, {
   platform,
@@ -12,5 +19,5 @@ Object.assign(window, {
   setValue,
   getAllDefaultApp,
   setDefaultApp,
-  clearCache,
+  onClearCache,
 });

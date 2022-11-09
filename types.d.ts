@@ -7,7 +7,7 @@ declare interface Window {
   platform: any;
   getAllDefaultApp(): any;
   setDefaultApp(key: string, appPath: string): void;
-  clearCache(): void;
+  onClearCache(): void;
 }
 
 declare var utools: any;
