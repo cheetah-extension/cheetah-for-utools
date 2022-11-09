@@ -3,7 +3,6 @@ import './mount';
 import {
   filterWithCache,
   filterWithSearchResult,
-  ErrorCodeMessage,
   updateHits,
   Project,
   ResultItem,
@@ -13,7 +12,7 @@ import {
 } from 'cheetah-core';
 import {
   initCore,
-  notice,
+  output,
   chooseFile,
   commandMap,
   getAllDefaultApp,
@@ -47,18 +46,7 @@ async function search(
       fromCache = false;
     }
 
-    const result: ResultItem[] = projects.map((projectItem: Project) => {
-      const { name, path, type, hits, idePath } = projectItem;
-
-      return {
-        title: name,
-        description: `${hits} ${path}`,
-        icon: `assets/type/${type}.png`,
-        path,
-        type,
-        idePath,
-      };
-    });
+    const result: ResultItem[] = output(projects);
 
     if (fromCache) {
       result.push({
@@ -117,23 +105,26 @@ window.exports = {
           const commandType = commandMap[payload];
 
           if (commandType === COMMAND.SET_APPLICATION) {
-            const projectPath: string = chooseFile();
-            setProjectApp(itemData, projectPath);
+            const appPath: string = chooseFile();
+            setProjectApp(itemData.path!, appPath);
             utools.hideMainWindow();
             utools.outPlugin();
             return;
           }
+
+          const defaultAppPath = getAllDefaultApp()?.[commandType] ?? '';
+          
           const command = await getOpenCommand(
             itemData,
             commandType,
-            getAllDefaultApp()
+            defaultAppPath
           );
 
           cp.exec(command, { windowsHide: true }, (error: any) => {
             if (error) {
               utools.showNotification(error?.message ?? '未知错误');
             }
-            updateHits(itemData);
+            updateHits(itemData.path!);
             utools.hideMainWindow();
             utools.outPlugin();
           });

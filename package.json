@@ -1,6 +1,6 @@
 {
   "name": "cheetah-for-utools",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "猎豹 —— Git 项目快速打开工具 For uTools",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "vue": "^3.2.25",
     "vue-router": "^4.0.14",
     "windows-shortcuts": "^0.1.6",
-    "cheetah-core": "file:/Users/caohaoxia/Documents/work/tools/cheetah-core"
+    "cheetah-core": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
