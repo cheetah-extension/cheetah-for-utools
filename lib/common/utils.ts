@@ -2,7 +2,7 @@ import { ErrorCodeMessage } from 'cheetah-core';
 
 export function chooseFile() {
   return utools.showOpenDialog({
-    filters: [{ extensions: ['app', 'exe', 'lnk'] }],
+    filters: [{ name: '选择应用', extensions: ['app', 'exe', 'lnk'] }],
     properties: ['openFile'],
   });
 }

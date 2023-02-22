@@ -14,7 +14,7 @@ export const commandMap: { [key: string]: string } = {
 };
 
 export const platform: { [key: string]: boolean } = {
-  isMac: utools.isMacOs(),
+  isMac: utools.isMacOS(),
   isWin: utools.isWindows(),
   isLinux: utools.isLinux(),
 };

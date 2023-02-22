@@ -9,5 +9,3 @@ declare interface Window {
   setDefaultApp(key: string, appPath: string): void;
   onClearCache(): void;
 }
-
-declare var utools: any;

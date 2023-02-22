@@ -37,7 +37,6 @@ async function search(
     initCore();
     const needRefresh: boolean = keyword.includes(refreshKeyword);
     const searchKeyword = keyword.replace(refreshKeyword, '');
-    if (!searchKeyword) return callbackSetList();
     let projects: Project[] = await filterWithCache(searchKeyword);
     let fromCache = true;
     // 如果缓存结果为空或者需要刷新缓存，则重新搜索
@@ -97,6 +96,8 @@ window.exports = {
     mode: 'list',
     args: {
       search,
+      enter: (action: any, callbackSetList: any) =>
+        search(action, '', callbackSetList),
       select: async (action: any, itemData: ResultItem) => {
         try {
           if (commonSelect(itemData)) return;
@@ -105,15 +106,15 @@ window.exports = {
           const commandType = commandMap[payload];
 
           if (commandType === COMMAND.SET_APPLICATION) {
-            const appPath: string = chooseFile();
-            setProjectApp(itemData.path!, appPath);
+            const appPath: string = chooseFile() as any;
+            setProjectApp(itemData.path!, appPath!);
             utools.hideMainWindow();
             utools.outPlugin();
             return;
           }
 
           const defaultAppPath = getAllDefaultApp()?.[commandType] ?? '';
-          
+
           const command = await getOpenCommand(
             itemData,
             commandType,
@@ -151,7 +152,7 @@ window.exports = {
             webPreferences: {
               preload: 'index.js',
             },
-          },
+          } as any,
           () => {
             settingWindow.show();
           }

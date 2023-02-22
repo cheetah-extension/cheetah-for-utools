@@ -21,6 +21,5 @@ export default {
     resolve(),
     commonjs(),
     typescript(),
-    production && uglify(),
   ]
 }

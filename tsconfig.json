@@ -25,7 +25,8 @@
     ],
     "rootDir": "./",
     "types": [
-      "node"
+      "node",
+      "utools-api-types"
     ],
     "baseUrl": ".",
     "paths": {
