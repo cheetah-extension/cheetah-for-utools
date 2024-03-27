@@ -1,14 +1,12 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.2",
   "preload": "index.js",
   "logo": "assets/logo.png",
   "platform": [
     "win32",
     "darwin"
   ],
-  "development": {
-    "preload": "/Users/caohaoxia/Documents/work/tools/cheetah-for-utools/package/index.js"
-  },
+
   "features": [
     {
       "code": "open",

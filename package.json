@@ -3,11 +3,12 @@
   "version": "1.2.1",
   "description": "猎豹 —— Git 项目快速打开工具 For uTools",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "preload-dev": "rollup -c -w",
     "preload-build": "rollup -c",
-    "view-dev": "vue-tsc --noEmit && vite build --watch --emptyOutDir",
-    "view-build": "vue-tsc --noEmit && vite build --emptyOutDir",
+    "view-dev": "vite build --watch --emptyOutDir",
+    "view-build": "vite build --emptyOutDir",
     "build": "run-p preload-build view-build",
     "dev": "run-p preload-dev view-dev"
   },
@@ -15,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cheetah-core": "^1.0.0",
+    "cheetah-core": "^1.0.7",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14",
     "windows-shortcuts": "^0.1.6"

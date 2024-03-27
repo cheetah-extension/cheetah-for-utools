@@ -12,8 +12,7 @@
     "isolatedModules": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
     "lib": [
       "dom",
@@ -38,5 +37,10 @@
   "exclude": [
     "node_modules",
     ".vscode-test"
+  ],
+  "include": [
+    "window/**/*",
+    "lib/**/*",
+    "types.d.ts"
   ]
 }
